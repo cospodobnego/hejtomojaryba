@@ -1,4 +1,3 @@
-pip install django
 from django.apps import AppConfig
 
 
