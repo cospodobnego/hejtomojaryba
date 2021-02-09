@@ -1,0 +1,34 @@
+
+<img src="/media/penguin_1.png" draggable="true" ondragstart="drag(event);" id="penguin_1" class="penguin">
+
+
+<div ondrop="drop(event);" ondragover="allowDrop(event)">
+    <img class="img-fluid" alt="" src="/media/{{value}}.png" width="75">
+</div>
+
+
+<script>
+function drag(ob)
+{
+    ob.dataTransfer.setData("Text",ob.target.id);
+}
+
+function drop(ob)
+{
+    var id = ob.dataTransfer.getData("Text");
+    var t = ob.target;
+    if (ob.target.nodeName == "IMG")
+        t = ob.target.parentNode;
+    t.innerHTML = "";
+    var img = document.getElementById(id);
+    t.appendChild(img);
+    $('#images').append(img.src + "; " )
+
+    ob.preventDefault();
+}
+
+function allowDrop(ob)
+{
+    ob.preventDefault();
+}
+</script>

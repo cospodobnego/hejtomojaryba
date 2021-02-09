@@ -1,0 +1,436 @@
+{% load static %}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Players</title>
+
+    <!-- jquery -->
+    <script src="https://unpkg.com/jquery@3.4.1/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- bootstrap 4 -->
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet' />
+</head>
+
+<style>
+    body {
+    background: url('{% static "../media/background.jpg" %}') no-repeat center center fixed;
+}
+.background {
+    background-image:url('../media/background.jpg');
+    background-size:100% 100%;
+}
+.position {
+    position: absolute;
+    top: 10%;
+    left: 20%;
+}
+.shift {
+    padding-left:70px;
+}
+.custom {
+    width: 20% !important;
+}
+.player1 {
+    position: absolute;
+    top: 20%;
+    width: 10% !important;
+}
+.score1 {
+    position: absolute;
+    top: 20%;
+    left: 11%;
+    width: 5% !important;
+}
+
+.player2 {
+    position: absolute;
+    top: 35%;
+    width: 10% !important;
+}
+.score2 {
+    position: absolute;
+    top: 35%;
+    left: 11%;
+    width: 5% !important;
+}
+
+.player1p {
+    position: absolute;
+    top: 25%;
+    width: 10% !important;
+}
+.score1p {
+    position: absolute;
+    top: 25%;
+    left: 11%;
+    width: 5% !important;
+}
+
+.player2p {
+    position: absolute;
+    top: 40%;
+    width: 10% !important;
+}
+.score2p {
+    position: absolute;
+    top: 40%;
+    left: 11%;
+    width: 5% !important;
+}
+
+.new_game {
+    position: absolute;
+    top: 50%;
+    width: 10% !important;
+}
+
+.next {
+    position: absolute;
+    top: 55%;
+    width: 10% !important;
+}
+.penguin {
+    width: 20px;
+    padding: 1px;
+    height: 30px;
+}
+
+</style>
+
+<body class="background">
+
+<div align="center" class="pt-2">
+    <button class="btn btn-danger" type="button" id="info" style="display: none; visibility: visible;">Move not allowed</button>
+</div>
+
+<center>
+    {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show w-25" style="font-size: 14px;">
+                    {{ message }}
+              </div>
+          {% endfor %}
+    {% endif %}
+</center>
+
+
+<button class="btn btn-dark player1" type="button" name="register">Player I score</button>
+<button class="btn btn-info score1" type="button" name="register">{{player_1_score}}</button>
+{% if round_number|divisibleby:2 %}
+    <button class="btn btn-warning player1p" type="button" name="register">Player I pawns</button>
+{% endif %}
+
+<button class="btn btn-info score1p" type="button" name="register">
+    {% if round_number|divisibleby:2 %}
+        {% if round_number < 10 %}
+            {% if not position_penguin1_a %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_a">
+            {% endif %}
+            {% if not position_penguin1_b %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_b">
+            {% endif %}
+            {% if not position_penguin1_c %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_c">
+            {% endif %}
+            {% if not position_penguin1_d %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_d">
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if round_number < 10 %}
+            {% if not position_penguin1_a %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_a" draggable="false">
+            {% endif %}
+            {% if not position_penguin1_b %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_b" draggable="false">
+            {% endif %}
+            {% if not position_penguin1_c %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_c" draggable="false">
+            {% endif %}
+            {% if not position_penguin1_d %}
+                <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_d" draggable="false">
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</button>
+
+
+<button class="btn btn-dark player2" type="button" name="register">Player II score</button>
+<button class="btn btn-info score2" type="button" name="register">{{player_2_score}}</button>
+{% if not round_number|divisibleby:2 %}
+    <button class="btn btn-warning player2p" type="button" name="register">Player II pawns</button>
+{% endif %}
+
+<button class="btn btn-info score2p" type="button" name="register">
+    {% if not round_number|divisibleby:2 %}
+        {% if round_number < 10 %}
+            {% if not position_penguin2_a %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_a">
+            {% endif %}
+            {% if not position_penguin2_b %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_b">
+            {% endif %}
+            {% if not position_penguin2_c %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_c">
+            {% endif %}
+            {% if not position_penguin2_d %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_d">
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if round_number < 10 %}
+            {% if not position_penguin2_a %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_a" draggable="false">
+            {% endif %}
+            {% if not position_penguin2_b %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_b" draggable="false">
+            {% endif %}
+            {% if not position_penguin2_c %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_c" draggable="false">
+            {% endif %}
+            {% if not position_penguin2_d %}
+                <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_d" draggable="false">
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</button>
+
+<a type="button" class="btn btn-warning new_game" href="/game_2/">New Game</a>
+
+
+<input value="{{penguin1_a_possible_movements}}" id="penguin1_a_possible_movements" hidden>
+<input value="{{penguin1_b_possible_movements}}" id="penguin1_b_possible_movements" hidden>
+<input value="{{penguin1_c_possible_movements}}" id="penguin1_c_possible_movements" hidden>
+<input value="{{penguin1_d_possible_movements}}" id="penguin1_d_possible_movements" hidden>
+<input value="{{penguin2_a_possible_movements}}" id="penguin2_a_possible_movements" hidden>
+<input value="{{penguin2_b_possible_movements}}" id="penguin2_b_possible_movements" hidden>
+<input value="{{penguin2_c_possible_movements}}" id="penguin2_c_possible_movements" hidden>
+<input value="{{penguin2_d_possible_movements}}" id="penguin2_d_possible_movements" hidden>
+
+<form method="post">{% csrf_token %}
+    <input value="{{round_number}}" name="round_number" hidden>
+    <input value="{{player_1_score}}" name="player_1" hidden>
+    <input value="{{player_2_score}}" name="player_2" hidden>
+    <input value="{{board}}" name="board" hidden>
+    <table class="position">
+        <tbody>
+            {% for row in board %}
+                {% if forloop.counter|divisibleby:2 %}
+                    <tr>
+                        {% for value in row %}
+                            <td>
+                                <div class="dropArea">
+                                    <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="" hidden>
+                                    <img class="img-fluid" alt="" src="/media/{{value}}.png" width="50">
+                                    {% if forloop.parentloop.counter == position_penguin1_a.0 and forloop.counter == position_penguin1_a.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_a" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_a">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_b.0 and forloop.counter == position_penguin1_b.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_b" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_b">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_c.0 and forloop.counter == position_penguin1_c.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_c" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_c">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_d.0 and forloop.counter == position_penguin1_d.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_d" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_d">
+                                    {% endif %}
+
+                                    {% if forloop.parentloop.counter == position_penguin2_a.0 and forloop.counter == position_penguin2_a.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_a" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_a">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_b.0 and forloop.counter == position_penguin2_b.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_b" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_b">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_c.0 and forloop.counter == position_penguin2_c.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_c" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_c">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_d.0 and forloop.counter == position_penguin2_d.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_d" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_d">
+                                    {% endif %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        {% for value in row %}
+                            <td class="shift">
+                                <div class="dropArea">
+                                    <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="" hidden>
+                                    <img class="img-fluid" alt="" src="/media/{{value}}.png" width="50">
+                                    {% if forloop.parentloop.counter == position_penguin1_a.0 and forloop.counter == position_penguin1_a.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_a" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_a">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_b.0 and forloop.counter == position_penguin1_b.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_b" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_b">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_c.0 and forloop.counter == position_penguin1_c.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_c" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_c">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin1_d.0 and forloop.counter == position_penguin1_d.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin1_d" hidden>
+                                        <img src="/media/penguin_1.png" class="penguin dr" id="penguin1_d">
+                                    {% endif %}
+
+                                    {% if forloop.parentloop.counter == position_penguin2_a.0 and forloop.counter == position_penguin2_a.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_a" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_a">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_b.0 and forloop.counter == position_penguin2_b.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_b" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_b">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_c.0 and forloop.counter == position_penguin2_c.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_c" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_c">
+                                    {% endif %}
+                                    {% if forloop.parentloop.counter == position_penguin2_d.0 and forloop.counter == position_penguin2_d.1 %}
+                                        <input value="{{forloop.parentloop.counter}}{{forloop.counter}}" name="penguin2_d" hidden>
+                                        <img src="/media/penguin_2.png" class="penguin dr" id="penguin2_d">
+                                    {% endif %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        <tr>
+            <td colspan="8" align="center" class="pt-4">
+                <button class="btn btn-warning custom submit" type="submit" name="register">Next Penguin</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+<script>
+        var round = $("input[name=round_number]").attr('value');
+
+        var penguin1_a_check = $('#penguin1_a_possible_movements').attr('value');
+        if (penguin1_a_check == '') {
+            $('#penguin1_a').hide();
+        }
+        if (round % 2 != 0) {
+            $('#penguin1_a').attr({'draggable': 'false'});
+        }
+
+        var penguin1_b_check = $('#penguin1_b_possible_movements').attr('value');
+        console.log(penguin1_b_check)
+        if (penguin1_b_check == '') {
+            $('#penguin1_b').hide();
+        }
+        if (round % 2 != 0) {
+            $('#penguin1_b').attr({'draggable': 'false'});
+        }
+
+        var penguin1_c_check = $('#penguin1_c_possible_movements').attr('value');
+        if (penguin1_c_check == '') {
+            $('#penguin1_c').hide();
+        }
+
+        if (round % 2 != 0) {
+            $('#penguin1_c').attr({'draggable': 'false'});
+        }
+
+        var penguin1_d_check = $('#penguin1_d_possible_movements').attr('value');
+        console.log(penguin1_d_check)
+        if (penguin1_d_check == '') {
+            $('#penguin1_d').hide();
+        }
+
+        if (round % 2 != 0) {
+            $('#penguin1_d').attr({'draggable': 'false'});
+        }
+
+        var penguin2_a_check = $('#penguin2_a_possible_movements').attr('value');
+        console.log(penguin2_a_check)
+        if (penguin2_a_check == '') {
+            $('#penguin2_a').hide();
+        }
+
+        if (round % 2 == 0) {
+            $('#penguin2_a').attr({'draggable': 'false'});
+        }
+
+        var penguin2_b_check = $('#penguin2_b_possible_movements').attr('value');
+        console.log(penguin2_b_check)
+        if (penguin2_b_check == '') {
+            $('#penguin2_b').hide();
+        }
+
+        if (round % 2 == 0) {
+            $('#penguin2_b').attr({'draggable': 'false'});
+        }
+
+        var penguin2_c_check = $('#penguin2_c_possible_movements').attr('value');
+        console.log(penguin2_c_check)
+        if (penguin2_c_check == '') {
+            $('#penguin2_c').hide();
+        }
+
+        if (round % 2 == 0) {
+            $('#penguin2_c').attr({'draggable': 'false'});
+        }
+
+        var penguin2_d_check = $('#penguin2_d_possible_movements').attr('value');
+        console.log(penguin2_d_check)
+        if (penguin2_d_check == '') {
+            $('#penguin2_d').hide();
+        }
+
+        if (round % 2 == 0) {
+            $('#penguin2_d').attr({'draggable': 'false'});
+        }
+
+</script>
+
+
+<script>
+
+		$('.dr').on("dragstart", function (event) {
+			  var dt = event.originalEvent.dataTransfer;
+			  $(this).closest('.dropArea').find("input").attr({'name': ''});
+			  dt.setData('image_data', $(this).attr('id'));
+			});
+
+	    $('.dropArea').on("dragenter dragover drop", function (event) {
+		   event.preventDefault();
+		   if (event.type === 'drop') {
+                var data = event.originalEvent.dataTransfer.getData('image_data',$(this).attr('id'));
+                var list = $('#' + data + '_possible_movements').attr('value').split(",")
+                var position_data = $(this).find("input").attr('value');
+
+                //console.log(list);
+                //console.log(position_data);
+
+                if(jQuery.inArray(position_data, list) > -1){
+                    $(this).find("input").attr({'name': data});
+                    $('#'+data).attr('disabled','disabled').css('opacity',0.5);
+                    $('#'+data).css({'margin-top': '-35px', 'left': '15px', 'z-index': '1'}).appendTo($(this));
+                    $( "#info" ).hide();
+                }
+                else {
+                    $( "#info" ).show();
+                }
+
+		   };
+	   });
+</script>
+
+
+
+</body>
+
+

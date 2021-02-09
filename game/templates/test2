@@ -1,0 +1,75 @@
+
+
+ 			        var position_data = $(this).find("input").attr('value');
+			        console.log("--------------------------------------------");
+			        console.log(position_data);
+                    console.log("********");
+			        var list = $('#penguin1_possible_movements').attr('value')
+			        console.log(zz);
+
+			        for ( var i = 0, l = list.length; i < l; i++ ) {
+                        console.log(list[i]);
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+  $( function() {
+    $( ".draggable" ).draggable();
+    $( ".droppable" ).droppable({
+          $(this).css('background-color','red');
+
+    });
+  }
+
+
+  <script>
+    $(".submit").click(function(){
+        var fish_image = $('#penguin1_a').closest('img').attr('src');
+        var position_data = $('#penguin1_a').closest('input').attr('value');
+
+        var token = $('input[name="csrfmiddlewaretoken"]').prop('value');
+        $.ajax({
+            url: "/collect_points/",
+            cache: false,
+            data: {
+                fish_image : fish_image,
+                position_data : position_data,
+                csrfmiddlewaretoken: token,
+            },
+            type: "POST",
+        });
+    });
+</script>
+
+
+			  var board_data = $('input[name="array_data"]').attr('value')
+              $.ajax({
+                    url: "/check_movement/",
+                    cache: false,
+                    type: "POST",
+                    data: {
+                        board_data : board_data,
+                        csrfmiddlewaretoken: token,
+                    },
+
+              });
+
+
+              			        for ( var i = 0, l = list.length; i < l; i++ ) {
+			            if (list[i] == position_data) {
+                            var exists = true;
+                            return true;
+                        }
+                    }
+
+
+                    alert("exists");
